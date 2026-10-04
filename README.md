@@ -2,10 +2,19 @@
 
 ## File Organization
 
+```
+web-programming-3/
+├── models.js       # Student class with immutable id
+├── database.js     # Simulated async API (setTimeout + callback)
+├── analytics.js    # Analytical helper functions
+├── main.js         # Entry point that ties everything together
+└── README.md
+```
+
 - **`models.js`**: Defines the `Student` class. The `id` property is created with `Object.defineProperty()` as read-only and non-configurable. Includes `addCourse()` and `getAverage()` methods.
 - **`database.js`**: Simulates a slow database. `fetchStudents(callback)` waits 2 seconds with `setTimeout`, then passes the raw student data to the callback.
 - **`analytics.js`**: Contains `calculateClassAverage()`, `findTopStudent()` (uses `.reduce()`) and `filterStudents()` (a higher-order function that takes a criteria callback).
-- **`main.js`**: Entry point. Fetches the data, converts it into `Student` instances, tests ID immutability and prints the analytics report.
+- **`main.js`**: Fetches the data, converts it into `Student` instances, tests ID immutability and prints the analytics report.
 
 ## Challenges Faced
 
