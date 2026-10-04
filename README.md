@@ -1,24 +1,21 @@
-# University Course Management System
+# Web Programming – Assignment 3
+
+This assignment builds the core logic of a university grading system in JavaScript. Student data is fetched from a simulated asynchronous server, modeled with ES6 classes that have immutable IDs, and used to generate an analytics report.
 
 ## File Organization
 
 ```
 web-programming-3/
-├── models.js       # Student class with immutable id
-├── database.js     # Simulated async API (setTimeout + callback)
-├── analytics.js    # Analytical helper functions
-├── main.js         # Entry point that ties everything together
-└── README.md
+├── models.js      # Student class: read-only id via Object.defineProperty(), addCourse() and getAverage()
+├── database.js    # fetchStudents(callback): returns raw student data after a 2-second setTimeout delay
+├── analytics.js   # calculateClassAverage(), findTopStudent() with .reduce(), filterStudents() higher-order function
+├── main.js        # Entry point: fetches data, creates Student instances, tests immutability, prints the report
+└── README.md      # This file
 ```
 
-- **`models.js`**: Defines the `Student` class. The `id` property is created with `Object.defineProperty()` as read-only and non-configurable. Includes `addCourse()` and `getAverage()` methods.
-- **`database.js`**: Simulates a slow database. `fetchStudents(callback)` waits 2 seconds with `setTimeout`, then passes the raw student data to the callback.
-- **`analytics.js`**: Contains `calculateClassAverage()`, `findTopStudent()` (uses `.reduce()`) and `filterStudents()` (a higher-order function that takes a criteria callback).
-- **`main.js`**: Fetches the data, converts it into `Student` instances, tests ID immutability and prints the analytics report.
+## Challenges I Faced
 
-## Challenges Faced
-
-- **Strict mode:** Files using `import`/`export` run as ES modules, which are always in strict mode. Assigning to the read-only `id` throws a `TypeError` instead of failing silently, so the test is wrapped in `try/catch`.
-- **Asynchronous data:** All logic that uses the student data must run inside the `fetchStudents` callback, because the data does not exist until the 2-second delay ends.
-- **Plain objects vs. class instances:** The simulated server returns plain objects without the `getAverage()` method, so the data is converted into `Student` instances before running the analytics.
-- **Example output difference:** The assignment's example lists Zeynep (82.5) as the top student, but from the given data Ali's average is (90 + 85) / 2 = 87.5. The program correctly reports Ali.
+- **The immutability test crashed the program:** Because the files use `import`/`export`, they run as ES modules, which are always in strict mode. In strict mode, assigning to the read-only `id` throws a `TypeError` instead of failing silently, so I wrapped the assignment in a `try/catch`.
+- **Working with asynchronous data:** The student data only exists after the 2-second delay, so I had to place all the logic that uses it inside the `fetchStudents` callback. Code written after the call would run before the data arrived.
+- **Plain objects vs. class instances:** The simulated server returns plain objects, which don't have the `getAverage()` method. I converted them into `Student` instances with `new Student(...)` before running the analytics.
+- **Different top student from the example output:** The example output lists Zeynep (82.5) as the top student, but from the given data Ali's average is (90 + 85) / 2 = 87.5. My program reports Ali, which is the correct result.
